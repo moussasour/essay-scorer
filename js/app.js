@@ -22,6 +22,26 @@ essayEl.addEventListener("input", function () {
 
 scoreBtn.addEventListener("click", evaluate);
 
+var EXAMPLES = [
+  { type: "argumentative",
+    text: "Social media have become an essential part of young people's daily routine. On the one hand, platforms like Instagram and TikTok allow students to stay connected, discover new ideas, and even learn languages through short videos. On the other hand, excessive scrolling has been linked to shorter attention spans, poor sleep, and anxiety among teenagers. Many educators therefore argue that schools should teach digital literacy instead of simply banning phones. In my opinion, the solution is not prohibition but education: if students understand how these platforms are designed to capture their attention, they can use them more consciously. Moreover, parents and teachers should model healthy habits themselves, because young people imitate what they see rather than what they are told. In conclusion, social media is neither good nor evil; it is a tool whose effects depend entirely on how we choose to use it." },
+  { type: "descriptive",
+    text: "The old library stood at the end of a narrow street, its wooden door heavy with decades of paint. Inside, the smell of paper and dust mixed with the faint sweetness of cheap tea served at the back desk. Tall shelves reached almost to the ceiling, and the afternoon light fell in dusty columns across the reading tables. An elderly librarian sat behind a mountain of uncatalogued books, stamping returns with a rhythm so steady it seemed like the heartbeat of the building. Students whispered in the corners, their pens scratching quietly against paper, while outside the noise of the market felt like another world." },
+  { type: "expository",
+    text: "Learning a foreign language is a long process that requires regular practice and clear goals. First of all, vocabulary grows fastest when words are met repeatedly in real contexts rather than memorised from lists. Secondly, speaking improves only when the learner accepts making mistakes in front of others, which is why classroom discussion matters so much. In addition, listening to podcasts and watching films in the target language trains the ear to recognise natural rhythm and intonation. Finally, motivation plays a decisive role: students who connect the language to their personal ambitions, such as studying abroad or finding a better job, progress noticeably faster than those who study only for examinations. Therefore, effective language learning combines daily contact with the language and a strong personal reason for mastering it." }
+];
+var exampleIndex = 0;
+document.getElementById("example-btn").addEventListener("click", function () {
+  var ex = EXAMPLES[exampleIndex % EXAMPLES.length];
+  exampleIndex++;
+  document.getElementById("essay-type").value = ex.type;
+  essayEl.value = ex.text;
+  currentText = ex.text;
+  wordcountEl.textContent = wordCount(ex.text) + " words";
+  hide(resultsEl);
+  hide(errorBox);
+});
+
 async function evaluate() {
   var text = essayEl.value.trim();
   hide(errorBox);
@@ -53,7 +73,8 @@ async function evaluate() {
 
 function renderResult(result) {
   show(resultsEl);
-  document.getElementById("score-ring").innerHTML = scoreRingSVG(result.overall);
+  document.getElementById("score-ring").innerHTML = scoreRingSVG(0);
+  animateRing(result.overall);
   var cefr = document.getElementById("cefr");
   cefr.textContent = result.cefr;
   cefr.hidden = false;
@@ -97,7 +118,54 @@ function renderResult(result) {
     issuesEl.appendChild(heading);
     result.issues.forEach(function (issue) { issuesEl.appendChild(issueRow(issue)); });
   }
+
+  renderTips(result);
+
+  var printWrap = document.getElementById("print-wrap");
+  printWrap.innerHTML = "<button class='apply-fix' onclick='window.print()'>⎙ Print / save as PDF</button>";
+  show(printWrap);
   resultsEl.hidden = false;
+}
+
+// Personalised advice based on the weakest dimension.
+var TIPS = {
+  grammar: "Most of your marks are grammatical. Revise subject–verb agreement and verb tenses, then read your essay aloud — your ear catches what your eye misses.",
+  vocabulary: "Your word choice repeats itself. Replace common verbs with precise ones (get → obtain, big → substantial) and avoid reusing the same adjective in successive paragraphs.",
+  cohesion: "Your ideas stand next to each other rather than connecting. Link them with devices like however, moreover, as a result — and vary sentence length so the prose breathes.",
+  length: "Your essay needs more development. Expand each paragraph with one extra supporting idea or example, and aim for the full target range of your essay type."
+};
+
+function renderTips(result) {
+  var wrap = document.getElementById("tips");
+  if (!wrap) return;
+  var entries = Object.keys(result.subscores)
+    .map(function (k) { return [k, result.subscores[k]]; })
+    .filter(function (p) { return p[1]; })
+    .sort(function (a, b) { return a[1].score - b[1].score; });
+  var weakest = entries[0];
+  if (!weakest || weakest[1].score >= 90) {
+    wrap.innerHTML = "";
+    wrap.hidden = true;
+    return;
+  }
+  wrap.innerHTML =
+    "<h3 class='issues-title'>How to <em>improve</em></h3>" +
+    "<div class='issue tip'><span class='tag'>" + weakest[0] + "</span>" +
+    "<div class='issue-body'><div class='issue-text'>" + TIPS[weakest[0]] + "</div></div></div>";
+  wrap.hidden = false;
+}
+
+function animateRing(target) {
+  var el = document.querySelector("#score-ring text");
+  var start = null, dur = 900;
+  function step(ts) {
+    if (!start) start = ts;
+    var p = Math.min((ts - start) / dur, 1);
+    var eased = 1 - Math.pow(1 - p, 3);
+    el.textContent = Math.round(target * eased);
+    if (p < 1) requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
 }
 
 function scoreRingSVG(value) {

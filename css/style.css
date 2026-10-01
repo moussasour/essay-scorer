@@ -341,3 +341,17 @@ textarea.essay:focus { outline: none; border-color: var(--ink); }
 ::-webkit-scrollbar { width: 10px; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 999px; border: 2px solid var(--bg); }
 ::-webkit-scrollbar-track { background: transparent; }
+
+/* tip card */
+.issue.tip { border-left-color: var(--ink); }
+.issue.tip .tag { background: color-mix(in srgb, var(--ink) 12%, transparent); color: var(--ink); }
+
+/* print — the results become a clean report sheet */
+@media print {
+  body { background: #fff; }
+  .site-header, .site-footer, .editor-head, .editor-foot, #essay, .print-wrap, .error-box, .loading { display: none !important; }
+  .editor-layout { padding: 0; }
+  .score-grid { grid-template-columns: 240px 1fr; }
+  .score-card, .subscore, .issue, .chart-card { box-shadow: none; break-inside: avoid; }
+  .hero h1 .grad::after { display: none; }
+}
