@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Essay editor — EssayScorer</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400..700;1,400..700&amp;family=Instrument+Sans:wght@400..700&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="brand"><span class="brand-mark">ES</span><span>EssayScorer</span></a>
+      <nav class="nav">
+        <a href="editor.html">Editor</a>
+        <a href="progress.html">Progress</a>
+        <a href="about.html">How it works</a>
+        <button class="theme-toggle" aria-label="Toggle theme"></button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="editor-head">
+      <div>
+        <h1 class="page-title" style="margin:24px 0 4px">Essay editor</h1>
+        <p class="page-sub">Write or paste your essay, then score it.</p>
+      </div>
+      <div class="editor-controls">
+        <select id="essay-type" aria-label="Essay type">
+          <option value="argumentative">Argumentative</option>
+          <option value="expository">Expository</option>
+          <option value="descriptive">Descriptive</option>
+          <option value="narrative">Narrative</option>
+          <option value="short">Short response</option>
+        </select>
+        <button class="btn" id="score-btn">Score my essay</button>
+      </div>
+    </div>
+
+    <div class="editor-layout">
+      <div>
+        <textarea class="essay" id="essay" placeholder="Start typing your essay here…"></textarea>
+        <div class="editor-foot">
+          <span class="wordcount" id="wordcount">0 words</span>
+          <a href="progress.html">View progress →</a>
+        </div>
+      </div>
+
+      <div class="error-box" id="error-box" hidden></div>
+      <div class="loading" id="loading" hidden>
+        <span class="spinner"></span> Analysing grammar, vocabulary and cohesion…
+      </div>
+
+      <section id="results" hidden>
+        <div class="score-grid">
+          <div class="score-card">
+            <div class="score-label">Overall score</div>
+            <div id="score-ring"></div>
+            <div class="cefr-badge" id="cefr"></div>
+            <div style="font-size:12px;color:var(--muted);margin-top:8px">estimated level</div>
+          </div>
+          <div class="subscores" id="subscores"></div>
+        </div>
+
+        <div class="notice" id="notice" hidden></div>
+        <div class="issues" id="issues"></div>
+      </section>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      EssayScorer — Automated Writing Evaluation. Built as an academic project.
+      Grammar analysis powered by <a href="https://languagetool.org" target="_blank" rel="noreferrer">LanguageTool</a>.
+    </div>
+  </footer>
+
+  <script src="js/scoring.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/theme.js"></script>
+</body>
+</html>

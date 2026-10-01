@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How it works — EssayScorer</title>
+  <meta name="description" content="The scoring methodology behind EssayScorer: grammar, vocabulary, cohesion, length and CEFR estimation.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400..700;1,400..700&amp;family=Instrument+Sans:wght@400..700&amp;display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="brand"><span class="brand-mark">ES</span><span>EssayScorer</span></a>
+      <nav class="nav">
+        <a href="editor.html">Editor</a>
+        <a href="progress.html">Progress</a>
+        <a href="about.html">How it works</a>
+        <button class="theme-toggle" aria-label="Toggle theme"></button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <article class="prose">
+      <h1>How EssayScorer works</h1>
+      <p>
+        EssayScorer is an Automated Writing Evaluation (AWE) tool. It analyses an
+        English essay along four weighted dimensions and produces a final score
+        out of 100, plus a heuristic CEFR level estimate.
+      </p>
+
+      <h2>1. Grammar &amp; mechanics — weight 40%</h2>
+      <p>
+        The text is sent to <a href="https://languagetool.org" target="_blank" rel="noreferrer">LanguageTool</a>,
+        an open-source proofreading engine with rule-based and statistical models.
+        Every detected issue (grammar, spelling, punctuation, style) counts against
+        the grammar score, normalised per 100 words so that long essays are not
+        unfairly penalised.
+      </p>
+
+      <h2>2. Vocabulary richness — weight 30%</h2>
+      <p>
+        Lexical diversity is measured with the <em>Moving-Average Type-Token Ratio</em>
+        (MATTR, window 50), which stays stable regardless of text length — unlike
+        the raw type-token ratio, which drops as texts get longer. Advanced-word
+        density (words of 7+ letters) is combined with diversity in a 60/40 blend.
+      </p>
+
+      <h2>3. Cohesion — weight 20%</h2>
+      <p>
+        Two signals are combined: the density of explicit linking devices
+        (however, therefore, in contrast…) per sentence, and sentence-length variety
+        (coefficient of variation), a marker of rhetorical rhythm in academic prose.
+      </p>
+
+      <h2>4. Length fit — weight 10%</h2>
+      <p>
+        The word count is compared against a target range for the selected essay
+        type (e.g. 250–400 words for an argumentative essay) and scored by proximity.
+      </p>
+
+      <h2>CEFR estimation</h2>
+      <p>
+        The level estimate (A2–C1) is a heuristic index built from average sentence
+        length, lexical diversity and advanced-word density. It is indicative only —
+        not a substitute for a standardised test.
+      </p>
+
+      <h2>Technology</h2>
+      <table>
+        <tr><td>Languages</td><td>HTML, CSS, JavaScript — no framework</td></tr>
+        <tr><td>Grammar engine</td><td>LanguageTool public API</td></tr>
+        <tr><td>Text metrics</td><td>Custom JavaScript scoring engine (<code>js/scoring.js</code>)</td></tr>
+        <tr><td>Progress storage</td><td>Browser localStorage — no account, no server-side storage</td></tr>
+        <tr><td>Hosting</td><td>Any static host (Vercel, GitHub Pages, Netlify…)</td></tr>
+      </table>
+
+      <h2>Limitations</h2>
+      <p>
+        The scorer evaluates surface-level features of writing. It does not (yet)
+        judge argument quality, idea development or task achievement, which remain
+        the domain of human raters. Scores should be read as feedback for revision,
+        not as official grades.
+      </p>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      EssayScorer — Automated Writing Evaluation. Built as an academic project.
+      Grammar analysis powered by <a href="https://languagetool.org" target="_blank" rel="noreferrer">LanguageTool</a>.
+    </div>
+  </footer>
+
+  <script src="js/theme.js"></script>
+</body>
+</html>
